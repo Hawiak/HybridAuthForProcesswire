@@ -1,0 +1,215 @@
+<?php
+include('hybridauth/Hybrid/Auth.php');
+class ProcessHybridAuth extends Process implements Module, ConfigurableModule {
+
+	public static function getModuleInfo(){
+		return array(
+			'title' => 'HybridAuth',
+			'summary' => __('Intergrating HybridAuth with Processwire goodness'),
+			'autoload' => true,
+			'version' => 0.0,
+			'author' => 'Harmster',
+			'href' => '<Check later>'
+		);
+	}
+
+	public function init(){
+		$config_array = array(
+			'base_url' => $this->get('endpoint'),
+				'providers' => array(
+					"Twitter" => array(
+						"enabled" => $this->get('twitter-status'), "keys" => array("id" => $this->get('twitter-appid'), "secret" => $this->get('twitter-appsecret')
+						)
+					),
+					"Facebook" => array(
+						"enabled" => $this->get('facebook-status'), "keys" => array("id" => $this->get('facebook-appid'), "secret" => $this->get('facebook-appsecret')
+						)
+					),
+					"AOL" => array(
+						"enabled" => $this->get('aol-status'), "keys" => array("id" => $this->get('aol-appid'), "secret" => $this->get('aol-appsecret')
+						)
+					),
+					"Google" => array(
+						"enabled" => $this->get('google-status'), "keys" => array("id" => $this->get('google-appid'), "secret" => $this->get('google-appsecret')
+						)
+					),
+					"WindowsLive" => array(
+						"enabled" => $this->get('wl-status'), "keys" => array("id" => $this->get('wl-appid'), "secret" => $this->get('wl-appsecret')
+						)
+					),
+					"Yahoo" => array(
+						"enabled" => $this->get('yahoo-status'), "keys" => array("id" => $this->get('yahoo-appid'), "secret" => $this->get('yahoo-appsecret')
+						)
+					),
+					"MySpace" => array(
+						"enabled" => $this->get('myspace-status'), "keys" => array("id" => $this->get('myspace-appid'), "secret" => $this->get('myspace-appsecret')
+						)
+					),
+
+			)
+		);
+		$hybridauth = new Hybrid_Auth($config_array);
+		Wire::setFuel('hybridauth', $hybridauth);
+	}
+
+
+	static public function getModuleConfigInputfields(array $data){
+		$form = new InputfieldForm();
+		$form->attr('id', 'hybrid-auth-config');
+		$wrapper = new Inputfieldwrapper();
+		$wrapper->label = "Facebook";
+		$field = new InputfieldText();
+		$field->attr('id+name', 'endpoint');
+		if(isset($data['endpoint']) ? $field->value = $data['endpoint'] : $field->value = "localhost/example");
+		$wrapper->append($field);
+		//facebook
+		$select = new InputfieldSelect();
+		$select->name = 'facebook-status';
+		$select->label = 'Enable status';
+		$select->addOption('enabeld', 'Enabled');
+		$select->addOption('disabled', 'Disabled');
+		if(isset($data['facebook-status']) ? $select->value = $data['facebook-status'] : $select->value = "disabled");
+		$wrapper->append($select);
+		$field = new InputfieldText();
+		$field->label = "Facebook App ID";
+		$field->attr('id+name', 'facebook-appid');
+		if(isset($data['facebook-appid']) ? $field->value = $data['facebook-appid'] : $field->value = "app id");
+		$wrapper->append($field);
+		$field = new InputfieldText();
+		$field->label = "Facebook App Secret";
+		$field->attr('id+name', 'facebook-appsecret');
+		if(isset($data['facebook-appsecret']) ? $field->value = $data['facebook-appsecret'] : $field->value = "app secret");
+		$wrapper->append($field);
+		$form->append($wrapper);
+		$wrapper = new Inputfieldwrapper();
+		$wrapper->label = "Google";
+		//google
+		$select = new InputfieldSelect();
+		$select->name = 'google-status';
+		$select->label = "Enable status";
+		$select->addOption('enabeld', 'Enabled');
+		$select->addOption('disabled', 'Disabled');
+		if(isset($data['google-status']) ? $select->value = $data['google-status'] : $select->value = "disabled");
+		$wrapper->append($select);
+		$field = new InputfieldText();
+		$field->label = "Google App ID";
+		$field->attr('id+name', 'google-appid');
+		if(isset($data['google-appid']) ? $field->value = $data['google-appid'] : $field->value = "app id");
+		$wrapper->append($field);
+		$field = new InputfieldText();
+		$field->label = "Google App Secret";
+		$field->attr('id+name', 'google-appsecret');
+		if(isset($data['google-appsecret']) ? $field->value = $data['google-appsecret'] : $field->value = "app secret");
+		$wrapper->append($field);
+		$form->append($wrapper);
+		$wrapper = new Inputfieldwrapper();
+		$wrapper->label = "Yahoo";
+		//yahoo
+		$select = new InputfieldSelect();
+		$select->name = 'google-status';
+		$select->label = "Enable status";
+		$select->addOption('enabeld', 'Enabled');
+		$select->addOption('disabled', 'Disabled');
+		if(isset($data['yahoo-status']) ? $select->value = $data['yahoo-status'] : $select->value = "disabled");
+		$wrapper->append($select);
+		$field = new InputfieldText();
+		$field->attr('id+name', 'yahoo-appid');
+		$field->label = "Yahoo App ID";
+		if(isset($data['yahoo-appid']) ? $field->value = $data['yahoo-appid'] : $field->value = "app id");
+		$wrapper->append($field);
+		$field = new InputfieldText();
+		$field->attr('id+name', 'yahoo-appsecret');
+		$field->label = "Yahoo App Secret";
+		if(isset($data['yahoo-appsecret']) ? $field->value = $data['yahoo-appsecret'] : $field->value = "app secret");
+		$wrapper->append($field);
+		$form->append($wrapper);
+		$wrapper = new Inputfieldwrapper();
+		$wrapper->label = "Windows Live";
+		//Windows Live
+		$select = new InputfieldSelect();
+		$select->name = 'wl-status';
+		$select->label = "Enable status";
+		$select->addOption('enabeld', 'Enabled');
+		$select->addOption('disabled', 'Disabled');
+		if(isset($data['wl-status']) ? $select->value = $data['wl-status'] : $select->value = "disabled");
+		$wrapper->append($select);
+		$field = new InputfieldText();
+		$field->label = "Windows Live App ID";
+		$field->attr('id+name', 'wl-appid');
+		if(isset($data['wl-appid']) ? $field->value = $data['wl-appid'] : $field->value = "app id");
+		$wrapper->append($field);
+		$field = new InputfieldText();
+		$field->label = "Windows Live App Secret";
+		$field->attr('id+name', 'wl-appsecret');
+		if(isset($data['wl-appsecret']) ? $field->value = $data['wl-appsecret'] : $field->value = "app secret");
+		$wrapper->append($field);
+		$form->append($wrapper);
+		$wrapper = new Inputfieldwrapper();
+		$wrapper->label = "MySpace";
+		//MySpace
+		$select = new InputfieldSelect();
+		$select->name = 'myspace-status';
+		$select->label = "Enable status";
+		$select->addOption('enabeld', 'Enabled');
+		$select->addOption('disabled', 'Disabled');
+		if(isset($data['myspace-status']) ? $select->value = $data['myspace-status'] : $select->value = "disabled");
+		$wrapper->append($select);
+		$field = new InputfieldText();
+		$field->label = "MySpace App ID";
+		$field->attr('id+name', 'myspace-appid');
+		if(isset($data['myspace-appid']) ? $field->value = $data['myspace-appid'] : $field->value = "app id");
+		$wrapper->append($field);
+		$field = new InputfieldText();
+		$field->label = "MySpace App Secret";
+		$field->attr('id+name', 'myspace-appsecret');
+		if(isset($data['myspace-appsecret']) ? $field->value = $data['myspace-appsecret'] : $field->value = "app secret");
+		$wrapper->append($field);
+		$form->append($wrapper);
+		$wrapper = new Inputfieldwrapper();
+		$wrapper->label = "LinkedIn";
+		//LinkedIn
+		$select = new InputfieldSelect();
+		$select->name = 'linkedin-status';
+		$select->label = "Enable status";
+		$select->addOption('enabeld', 'Enabled');
+		$select->addOption('disabled', 'Disabled');
+		if(isset($data['linkedin-status']) ? $select->value = $data['linkedin-status'] : $select->value = "disabled");
+		$wrapper->append($select);
+		$field = new InputfieldText();
+		$field->label = "LinkedIn App ID";
+		$field->attr('id+name', 'linkedin-appid');
+		if(isset($data['linkedin-appid']) ? $field->value = $data['linkedin-appid'] : $field->value = "app id");
+		$wrapper->append($field);
+		$field = new InputfieldText();
+		$field->label = "LinkedIn App Secret";
+		$field->attr('id+name', 'linkedin-appsecret');
+		if(isset($data['linkedin-appsecret']) ? $field->value = $data['linkedin-appsecret'] : $field->value = "app secret");
+		$wrapper->append($field);
+		$form->append($wrapper);
+		$wrapper = new Inputfieldwrapper();
+		$wrapper->label = "AOL";
+		//OpenID
+		$select = new InputfieldSelect();
+		$select->name = 'aol-status';
+		$select->label = "Enable status";
+		$select->addOption('enabeld', 'Enabled');
+		$select->addOption('disabled', 'Disabled');
+		if(isset($data['aol-status']) ? $select->value = $data['aol-status'] : $select->value = "disabled");
+		$wrapper->append($select);
+		$field = new InputfieldText();
+		$field->label = "AOL App ID";
+		$field->attr('id+name', 'aol-appid');
+		if(isset($data['aol-appid']) ? $field->value = $data['aol-appid'] : $field->value = "app id");
+		$wrapper->append($field);
+		$field = new InputfieldText();
+		$field->label = "AOL App Secret";
+		$field->attr('id+name', 'aol-appsecret');
+		if(isset($data['aol-appsecret']) ? $field->value = $data['aol-appsecret'] : $field->value = "app secret");
+		$wrapper->append($field);
+
+		$form->append($wrapper);
+
+		return $form;
+	}
+
+}
